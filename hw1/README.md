@@ -21,7 +21,7 @@ Do **not** run `python` or `pip` directly. Always run scripts through `uv run` s
 and environments are handled automatically. If you want to add a new dependency, you can use `uv add`. This will add the dependency to `pyproject.toml`, update `uv.lock`, and install the package into your virtual environment.
 
 Example:
-
+d
 ```bash
 uv run src/hw1_imitation/train.py --help
 ```
@@ -45,7 +45,7 @@ Follow the prompt to paste your API key.
 First, create a Modal account. You should recieve $30 in free credits, which will be plenty for this assignment. Then, you can train on Modal with the following command:
 
 ```bash
-uv run modal run src/hw1_imitation/modal_train.py
+uv run modal run src/hw1_imitation/modal_train.pyt
 ```
 
 This will build a Modal container and launch training remotely. You can pass the same flags as the local training script. If you are logged into WandB locally, your API key will be automatically forwarded to the Modal container.

@@ -1,0 +1,38 @@
+[
+  {
+    "policy_type": "mse",
+    "run_id": "cc62bo2a",
+    "run_dir": "/home/hyoin/homework_spring2026/hw1/exp/seed_42_20261029_163403",
+    "loss_source": "/home/hyoin/homework_spring2026/hw1/exp/seed_42_20261029_163403/wandb/run-cc62bo2a.wandb",
+    "reward_source": "/home/hyoin/homework_spring2026/hw1/exp/seed_42_20261029_163403/log.csv",
+    "seed": 42,
+    "loss_points": 756,
+    "reward_points": 7,
+    "best_step": 60000,
+    "best_reward": 0.6874060198788147,
+    "assignment_target": 0.5,
+    "loss_smoothing_window_logged_points": 20,
+    "loss_description": "Raw recorded batch loss; trailing mean averages logged points, not every training batch.",
+    "reward_description": "Mean of per-episode maximum rewards over 100 evaluation episodes; not success rate.",
+    "figure": "mse_training_curves.png",
+    "exported_metrics": "mse_metrics.csv"
+  },
+  {
+    "policy_type": "flow",
+    "run_id": "qqzt0rdk",
+    "run_dir": "/home/hyoin/homework_spring2026/hw1/exp/seed_42_20261029_162755",
+    "loss_source": "/home/hyoin/homework_spring2026/hw1/exp/seed_42_20261029_162755/wandb/run-qqzt0rdk.wandb",
+    "reward_source": "/home/hyoin/homework_spring2026/hw1/exp/seed_42_20261029_162755/log.csv",
+    "seed": 42,
+    "loss_points": 756,
+    "reward_points": 7,
+    "best_step": 70000,
+    "best_reward": 0.8379549679612254,
+    "assignment_target": 0.7,
+    "loss_smoothing_window_logged_points": 20,
+    "loss_description": "Raw recorded batch loss; trailing mean averages logged points, not every training batch.",
+    "reward_description": "Mean of per-episode maximum rewards over 100 evaluation episodes; not success rate.",
+    "figure": "fm_training_curves.png",
+    "exported_metrics": "fm_metrics.csv"
+  }
+]

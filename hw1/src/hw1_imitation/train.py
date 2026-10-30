@@ -20,7 +20,7 @@ from hw1_imitation.data import (
     load_pusht_zarr,
 )
 from hw1_imitation.model import build_policy, PolicyType
-from hw1_imitation.evaluation import Logger
+from hw1_imitation.evaluation import Logger, evaluate_policy
 
 LOGDIR_PREFIX = "exp"
 
@@ -47,12 +47,13 @@ class TrainConfig:
     eval_interval: int = 10_000
     num_video_episodes: int = 5
     video_size: tuple[int, int] = (256, 256)
-    # How often to log training metrics, measured in training steps.
+    # How often to log and print training loss, measured in training steps.
     log_interval: int = 100
     # Random seed.
     seed: int = 42
     # WandB project name.
     wandb_project: str = "hw1-imitation"
+
     # Experiment name suffix for logging and WandB.
     exp_name: str | None = None
 
@@ -126,10 +127,56 @@ def run_training(config: TrainConfig) -> None:
         project=config.wandb_project, config=config_to_dict(config), name=exp_name
     )
     logger = Logger(log_dir)
+    
+    optimizer = torch.optim.Adam(
+        model.parameters(), lr=config.lr, weight_decay=config.weight_decay
+    )
 
-    ### TODO: PUT YOUR MAIN TRAINING LOOP HERE ###
+    @torch.compile
+    def train_step(state, action_chunk):
+        optimizer.zero_grad(set_to_none=True)
+        loss = model.compute_loss(state, action_chunk)
+        loss.backward()
+        optimizer.step()
+        return loss
+
+    step = 0
+    for epoch in range(config.num_epochs):
+        model.train()
+
+        for state, action_chunk in loader:
+            state = state.to(device)
+            action_chunk = action_chunk.to(device)
+
+            loss = train_step(state, action_chunk)
+            step += 1
+
+            if step % config.log_interval == 0:
+                loss_value = loss.item()
+                # WandB Logger (추가)
+                wandb.log({"train/loss": loss_value}, step=step)
+                print(
+                    f"Epoch {epoch + 1}/{config.num_epochs} | "
+                    f"Step {step} | Loss {loss_value:.6f}",
+                    flush=True,
+                )
+
+            if step % config.eval_interval == 0:
+                evaluate_policy(
+                    model=model,
+                    normalizer=normalizer,
+                    device=device,
+                    chunk_size=config.chunk_size,
+                    video_size=config.video_size,
+                    num_video_episodes=config.num_video_episodes,
+                    flow_num_steps=config.flow_num_steps,
+                    step=step,
+                    logger=logger,
+                )
+                model.train()
 
     logger.dump_for_grading()
+
 
 
 def main() -> None:
